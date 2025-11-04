@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación con Expresiones Regulares - Estudiante</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/stylesFunciones.css">
+    
+    <style>
+        body {
+            padding-top: 20px;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .info-box {
+            background-color: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .regex-pattern {
+            background-color: #f5f5f5;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        #resultado {
+            display: none;
+            margin-top: 20px;
+        }
+        .help-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Validación de Formulario de Estudiante</h1>
+        <h5 class="text-center text-muted mb-4">Usando Expresiones Regulares en JavaScript</h5>
+        
+        <!-- Información sobre expresiones regulares -->
+        <div class="info-box">
+            <h5><i class="bi bi-info-circle"></i> ¿Qué son las Expresiones Regulares?</h5>
+            <p>Las expresiones regulares (regex) son patrones que permiten validar y manipular texto de manera eficiente. En JavaScript, se utilizan para verificar que los datos ingresados cumplan con un formato específico.</p>
+        </div>
+        
+        <!-- Tabla de patrones -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Patrones de Validación Utilizados</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Campo</th>
+                            <th>Patrón Regex</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Carnet</td>
+                            <td><span class="regex-pattern">/^[A-Z]{2}\d{3}$/</span></td>
+                            <td>2 letras mayúsculas + 3 dígitos</td>
+                        </tr>
+                        <tr>
+                            <td>Nombre</td>
+                            <td><span class="regex-pattern">/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/</span></td>
+                            <td>Solo letras (con tildes) y espacios</td>
+                        </tr>
+                        <tr>
+                            <td>DUI</td>
+                            <td><span class="regex-pattern">/^\d{8}-\d$/</span></td>
+                            <td>8 dígitos + guión + 1 dígito</td>
+                        </tr>
+                        <tr>
+                            <td>NIT</td>
+                            <td><span class="regex-pattern">/^\d{4}-\d{6}-\d{3}-\d$/</span></td>
+                            <td>Formato: 4-6-3-1 dígitos separados</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha</td>
+                            <td><span class="regex-pattern">/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/</span></td>
+                            <td>Formato DD/MM/YYYY</td>
+                        </tr>
+                        <tr>
+                            <td>Correo</td>
+                            <td><span class="regex-pattern">/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/</span></td>
+                            <td>Formato estándar de email</td>
+                        </tr>
+                        <tr>
+                            <td>Edad</td>
+                            <td><span class="regex-pattern">/^\d+$/</span></td>
+                            <td>Solo números (15-100 años)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Formulario -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Formulario de Registro de Estudiante</h5>
+            </div>
+            <div class="card-body">
+                <form id="formEstudiante">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="inputCarnet" class="form-label">Carnet:</label>
+                            <input type="text" class="form-control" id="inputCarnet" placeholder="AB001" required>
+                            <div class="help-text">Formato: 2 letras mayúsculas + 3 números (Ej: AB001, XY999)</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="inputNombre" class="form-label">Nombre Completo:</label>
+                            <input type="text" class="form-control" id="inputNombre" placeholder="Juan Pérez García" required>
+                            <div class="help-text">Solo letras y espacios, sin números ni caracteres especiales</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="inputDUI" class="form-label">DUI:</label>
+                            <input type="text" class="form-control" id="inputDUI" placeholder="12345678-9" required>
+                            <div class="help-text">Formato: 8 dígitos-1 dígito (Ej: 12345678-9)</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="inputNIT" class="form-label">NIT:</label>
+                            <input type="text" class="form-control" id="inputNIT" placeholder="1234-567890-123-4" required>
+                            <div class="help-text">Formato: 4-6-3-1 dígitos (Ej: 1234-567890-123-4)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="inputFechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
+                            <input type="text" class="form-control" id="inputFechaNacimiento" placeholder="25/12/2005" required>
+                            <div class="help-text">Formato: DD/MM/YYYY (Ej: 25/12/2005)</div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="inputCorreo" class="form-label">Correo Electrónico:</label>
+                            <input type="text" class="form-control" id="inputCorreo" placeholder="estudiante@correo.com" required>
+                            <div class="help-text">Formato: usuario@dominio.com</div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="inputEdad" class="form-label">Edad:</label>
+                            <input type="text" class="form-control" id="inputEdad" placeholder="20" required>
+                            <div class="help-text">Solo números (entre 15 y 100 años)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <button type="button" class="btn btn-secondary" id="btnLimpiar">
+                            <i class="bi bi-x-circle"></i> Limpiar
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnValidar">
+                            <i class="bi bi-check-circle"></i> Validar Formulario
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Resultado de la validación -->
+        <div id="resultado"></div>
+        
+        <!-- Información adicional -->
+        <div class="card mt-4 mb-5">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Conceptos Clave de Expresiones Regulares</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li><strong>^ y $:</strong> Indican el inicio y fin del patrón (aseguran que toda la cadena coincida)</li>
+                    <li><strong>[A-Z]:</strong> Cualquier letra mayúscula de A a Z</li>
+                    <li><strong>\d:</strong> Cualquier dígito (equivalente a [0-9])</li>
+                    <li><strong>{n}:</strong> Exactamente n repeticiones del patrón anterior</li>
+                    <li><strong>+:</strong> Una o más repeticiones del patrón anterior</li>
+                    <li><strong>\s:</strong> Cualquier espacio en blanco</li>
+                    <li><strong>( ):</strong> Agrupación de patrones</li>
+                    <li><strong>|:</strong> Operador OR (alternativa entre patrones)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Navegación -->
+        <div class="text-center mb-4">
+            <a href="../indexFunciones.html" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Volver al Índice de Funciones
+            </a>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Script de validación -->
+    <script src="../js/validacionEstudiante.js"></script>
+</body>
+</html>
